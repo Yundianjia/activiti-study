@@ -20,7 +20,7 @@ public class ProcessTestAutoCompleteTask {
 	private String filename = "/Users/henryyan/work/projects/activiti/activiti-study/src/test/resources/diagrams/AutoCompleteTask.bpmn";
 
 	@Rule
-	public ActivitiRule activitiRule = new ActivitiRule();
+	public ActivitiRule activitiRule = new ActivitiRule(); // ActivitiRule 到底是什么对象
 
 	@Test
 	public void startProcess() throws Exception {

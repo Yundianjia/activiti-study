@@ -18,7 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * 任务委派
+ * 任务委派 - 任务的拥有者与任务的 assignee 不是同一个人
  * 
  * @author henryyan
  */

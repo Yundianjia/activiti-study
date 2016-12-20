@@ -27,7 +27,7 @@ public class FixFlowTextInDiagram {
 				.addInputStream(
 						"aaa.bpmn20.xml",
 						new FileInputStream(
-								"/Users/henryyan/work/projects/activiti/activiti-study/src/test/resources/diagrams/bugs/leave.bpmn"))
+								"test/resources/diagrams/bugs/leave.bpmn"))
 				.deploy();
 
 		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().singleResult();
@@ -60,5 +60,4 @@ public class FixFlowTextInDiagram {
 		// wirte bytes to file
 		//FileUtils.writeByteArrayToFile(file, b);
 	}
-
 }

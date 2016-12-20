@@ -13,20 +13,18 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.test.ActivitiRule;
+import org.activiti.engine.test.Deployment;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class ProcessTestBilling {
 
-	private String filename = "/Users/henryyan/work/projects/activiti/activiti-study/src/test/resources/diagrams/billing.bpmn";
-
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule();
 
 	@Test
+	@Deployment(resources = { "diagrams/billing.bpmn" })
 	public void startProcess() throws Exception {
-		RepositoryService repositoryService = activitiRule.getRepositoryService();
-		repositoryService.createDeployment().addInputStream("billing.bpmn20.xml", new FileInputStream(filename)).deploy();
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");
@@ -48,9 +46,9 @@ public class ProcessTestBilling {
 	}
 	
 	@Test
+	@Deployment(resources = { "diagrams/billing.bpmn" })
 	public void startProcess11() throws Exception {
 		RepositoryService repositoryService = activitiRule.getRepositoryService();
-		repositoryService.createDeployment().addInputStream("billing.bpmn20.xml", new FileInputStream(filename)).deploy();
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");
@@ -78,9 +76,9 @@ public class ProcessTestBilling {
 	}
 	
 	@Test
+	@Deployment(resources = { "diagrams/billing.bpmn" })
 	public void startProcess22() throws Exception {
 		RepositoryService repositoryService = activitiRule.getRepositoryService();
-		repositoryService.createDeployment().addInputStream("billing.bpmn20.xml", new FileInputStream(filename)).deploy();
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");

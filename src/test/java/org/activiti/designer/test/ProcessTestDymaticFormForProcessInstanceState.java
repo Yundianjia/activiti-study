@@ -16,22 +16,23 @@ import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.test.ActivitiRule;
+import org.activiti.engine.test.Deployment;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class ProcessTestDymaticFormForProcessInstanceState {
 
-  private String filename = "/Users/henryyan/work/projects/activiti/activiti-study/src/test/resources/diagrams/form/DymaticForm.bpmn";
-
   @Rule
   public ActivitiRule activitiRule = new ActivitiRule();
 
   @Test
+  @Deployment(resources = { "diagrams/form/DymaticForm.bpmn" })
   public void startProcess() throws Exception {
     RepositoryService repositoryService = activitiRule.getRepositoryService();
-    repositoryService.createDeployment().addInputStream("DymaticForm.bpmn20.xml", new FileInputStream(filename)).deploy();
 
     ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey("DymaticForm").latestVersion().singleResult();
+
+    // 带有动态的 form 表单的的 bpmn
     FormService formService = activitiRule.getFormService();
     StartFormData startFormData = formService.getStartFormData(processDefinition.getId());
     assertNull(startFormData.getFormKey());

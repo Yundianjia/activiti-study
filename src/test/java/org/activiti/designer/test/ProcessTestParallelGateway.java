@@ -32,16 +32,21 @@ public class ProcessTestParallelGateway {
     RuntimeService runtimeService = activitiRule.getRuntimeService();
     Map<String, Object> variableMap = new HashMap<String, Object>();
     variableMap.put("name", "Activiti");
+    // 通过 key 以及附带的 变量来启动流程图
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("ParallelGateway", variableMap);
     assertNotNull(processInstance.getId());
     System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
 
     TaskService taskService = activitiRule.getTaskService();
+    // 第一个赋值给 user1 的用户任务, singleResult() - 绑定只有一个结果。
     Task task = taskService.createTaskQuery().taskAssignee("user1").singleResult();
     taskService.complete(task.getId());
 
+    // 获取 部门领导审批 的任务
     Task task2 = taskService.createTaskQuery().taskCandidateUser("user2").singleResult();
     assertNotNull(task2);
+
+    // 获取 人事审批 的任务
     Task task3 = taskService.createTaskQuery().taskCandidateUser("user3").singleResult();
     assertNotNull(task3);
 
@@ -53,6 +58,7 @@ public class ProcessTestParallelGateway {
     task3 = taskService.createTaskQuery().taskCandidateUser("user3").singleResult();
     assertNull(task3);
 
+    // 获取 考勤归档 的任务
     task = taskService.createTaskQuery().taskAssignee("user1").singleResult();
     taskService.complete(task.getId());
     

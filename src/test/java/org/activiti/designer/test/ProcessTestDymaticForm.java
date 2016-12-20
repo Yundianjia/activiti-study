@@ -26,27 +26,28 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.test.ActivitiRule;
+import org.activiti.engine.test.Deployment;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class ProcessTestDymaticForm {
 
-	private String filename = "/Users/henryyan/work/projects/activiti/activiti-study/src/test/resources/diagrams/form/DymaticForm.bpmn";
-
 	@Rule
 	public ActivitiRule activitiRule = new ActivitiRule();
 
 	@Test
+	@Deployment(resources = { "diagrams/form/DymaticForm.bpmn" })
 	public void startProcess() throws Exception {
 		RepositoryService repositoryService = activitiRule.getRepositoryService();
-		repositoryService.createDeployment().addInputStream("DymaticForm.bpmn20.xml", new FileInputStream(filename)).deploy();
-		
 		ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey("DymaticForm").latestVersion().singleResult();
+
+		// 表单数据的测试用例
 		FormService formService = activitiRule.getFormService();
 		StartFormData startFormData = formService.getStartFormData(processDefinition.getId());
 		assertNull(startFormData.getFormKey());
-		
+
+		// 设置表单的中的值
 		Map<String, String> formProperties = new HashMap<String, String>();
 		formProperties.put("name", "HenryYan");
 		
@@ -59,7 +60,7 @@ public class ProcessTestDymaticForm {
 		assertEquals(variables.size(), 1);
 		Set<Entry<String, Object>> entrySet = variables.entrySet();
 		for (Entry<String, Object> entry : entrySet) {
-			System.out.println(entry.getKey() + "=" + entry.getValue());
+			System.out.println("Entry Content is: " +  entry.getKey() + "=" + entry.getValue());
 		}
 		
 		// 历史记录

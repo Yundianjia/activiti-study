@@ -22,79 +22,85 @@ import org.junit.Test;
 
 public class ProcessTestAttachment {
 
-  @Rule
-  public ActivitiRule activitiRule = new ActivitiRule();
+    @Rule
+    public ActivitiRule activitiRule = new ActivitiRule();
 
-  @Test
-  @Deployment(resources = { "diagrams/Attachment.bpmn" })
-  public void startProcess() throws Exception {
-    TaskService taskService = activitiRule.getTaskService();
-    RuntimeService runtimeService = activitiRule.getRuntimeService();
-    Map<String, Object> variableMap = new HashMap<String, Object>();
-    variableMap.put("name", "Activiti");
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1", variableMap);
-    assertNotNull(processInstance.getId());
-    System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
+    @Test
+    @Deployment(resources = {"diagrams/Attachment.bpmn"})
+    public void startProcess() throws Exception {
+        TaskService taskService = activitiRule.getTaskService();
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        Map<String, Object> variableMap = new HashMap<String, Object>();
+        variableMap.put("name", "Activiti");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1", variableMap);
+        assertNotNull(processInstance.getId());
+        System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
 
-    Task singleResult = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult();
-    String url = "http://labs.mop.com/apache-mirror//ant/binaries/apache-ant-1.8.3-bin.zip";
-    String attachmentDescription = "ant bin package";
-    taskService.createAttachment("zip", singleResult.getId(), processInstance.getId(), "apache-ant-1.8.3-bin.zip", attachmentDescription, url);
-    taskService.complete(singleResult.getId());
+        Task singleResult = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult();
 
-    List<Attachment> taskAttachments = taskService.getTaskAttachments(singleResult.getId());
-    assertEquals(1, taskAttachments.size());
+        // 创建任务的附件的代码, 通过 taskService 的 createAttachment 接口
+        String url = "http://labs.mop.com/apache-mirror//ant/binaries/apache-ant-1.8.3-bin.zip";
+        String attachmentDescription = "ant bin package";
+        taskService.createAttachment("zip", singleResult.getId(), processInstance.getId(), "apache-ant-1.8.3-bin.zip", attachmentDescription, url);
+        taskService.complete(singleResult.getId());
 
-    HistoryService historyService = activitiRule.getHistoryService();
-    List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().finished().list();
-    assertEquals(false, list.isEmpty());
-  }
+        // 获取任务的附件:  java 的 List
+        List<Attachment> taskAttachments = taskService.getTaskAttachments(singleResult.getId());
+        assertEquals(1, taskAttachments.size());
 
-  @Test
-  @Deployment(resources = { "diagrams/Attachment.bpmn" })
-  public void testCandidateUsers() throws Exception {
-    TaskService taskService = activitiRule.getTaskService();
-    RuntimeService runtimeService = activitiRule.getRuntimeService();
-    Map<String, Object> variableMap = new HashMap<String, Object>();
-    variableMap.put("name", "Activiti");
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1", variableMap);
-    assertNotNull(processInstance.getId());
-    System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
+        HistoryService historyService = activitiRule.getHistoryService();
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().finished().list();
+        assertEquals(false, list.isEmpty());
+    }
 
-    assertNotNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
-    assertNotNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
+    @Test
+    @Deployment(resources = {"diagrams/Attachment.bpmn"})
+    public void testCandidateUsers() throws Exception {
+        TaskService taskService = activitiRule.getTaskService();
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
 
-    Task singleResult = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult();
-    taskService.complete(singleResult.getId());
+        // 带有初始方法的启动事件
+        Map<String, Object> variableMap = new HashMap<String, Object>();
+        variableMap.put("name", "Activiti");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1", variableMap);
+        assertNotNull(processInstance.getId());
+        System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
 
-    assertNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
-    assertNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
-  }
+        assertNotNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
+        assertNotNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
 
-  @Test
-  @Deployment(resources = { "diagrams/Attachment.bpmn" })
-  public void testCandidateUsersAddUserRuntime() throws Exception {
-    TaskService taskService = activitiRule.getTaskService();
-    RuntimeService runtimeService = activitiRule.getRuntimeService();
-    Map<String, Object> variableMap = new HashMap<String, Object>();
-    variableMap.put("name", "Activiti");
-    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1", variableMap);
-    assertNotNull(processInstance.getId());
-    System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
+        Task singleResult = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult();
+        taskService.complete(singleResult.getId());
 
-    assertNotNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
-    assertNotNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
+        assertNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
+        assertNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
+    }
 
-    String taskId = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult().getId();
-    taskService.addCandidateUser(taskId, "runtimeUser");
+    @Test
+    @Deployment(resources = {"diagrams/Attachment.bpmn"})
+    public void testCandidateUsersAddUserRuntime() throws Exception {
+        TaskService taskService = activitiRule.getTaskService();
+        RuntimeService runtimeService = activitiRule.getRuntimeService();
+        Map<String, Object> variableMap = new HashMap<String, Object>();
+        variableMap.put("name", "Activiti");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("process1", variableMap);
+        assertNotNull(processInstance.getId());
+        System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
 
-    assertNotNull(taskService.createTaskQuery().taskCandidateUser("runtimeUser").singleResult());
+        assertNotNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
+        assertNotNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
 
-    Task singleResult = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult();
-    taskService.complete(singleResult.getId());
+        // 给任务添加候选用户, 此时, 该任务有两个可以签收任务的人, 选择其中一个来处理
+        String taskId = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult().getId();
+        taskService.addCandidateUser(taskId, "runtimeUser");
 
-    assertNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
-    assertNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
-  }
+        assertNotNull(taskService.createTaskQuery().taskCandidateUser("runtimeUser").singleResult());
+
+        Task singleResult = taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult();
+        taskService.complete(singleResult.getId());
+
+        assertNull(taskService.createTaskQuery().taskCandidateUser("henryyan").singleResult());
+        assertNull(taskService.createTaskQuery().taskCandidateUser("kafeitu").singleResult());
+    }
 
 }

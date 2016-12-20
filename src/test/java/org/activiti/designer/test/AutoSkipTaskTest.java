@@ -28,6 +28,7 @@ public class AutoSkipTaskTest {
     /**
      * usertask1(user1) --> usertask2(user1,will be skiped) --> usertask3(user2) --> usertask4(empty assignee) --> usertask5(empty assignee)
      * 测试用例过程：完成第一个任务，任务到达usertask3，完成usertask3，给usertask4分配办理人，任务到达usertask5
+     * IoC  和 AOP 是啥
      */
     @Test
     @Deployment(resources = "diagrams/threeTask.bpmn")

@@ -28,7 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * 请求被驳回时自动把任务分配至上次办理人
+ * 请求被驳回时自动把任务分配至上次办理人 -- 如何才能触发了异常事件, 然后在回退过去
  * 
  * @author henryyan
  */
@@ -69,16 +69,16 @@ public class ProcessTestAutoAssignee {
     // 自动签收
     autoClaim(processInstance.getId());
 
-    // 验证是否已自动签收
+    // 验证是否已自动签收 - 自东签收就没有了
     taskOne = taskService.createTaskQuery().taskName("Task One").taskAssignee("user1").singleResult();
     assertNotNull(taskOne);
   }
 
   /**
-   * 自动签收分配到候选角色、候选组的任务
+   * 自动签收分配到候选角色、候选组的任务 - 主要用在测试流程引擎的处理中
    * 
-   * @param executionId
-   *          执行ID
+   * @param executionId  -  执行引擎的 ID
+   *         执行ID
    */
   public void autoClaim(String executionId) {
 
@@ -145,5 +145,4 @@ public class ProcessTestAutoAssignee {
       }
     }
   }
-
 }

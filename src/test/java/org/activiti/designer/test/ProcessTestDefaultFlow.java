@@ -12,6 +12,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.test.ActivitiRule;
+import org.activiti.engine.test.Deployment;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,9 +24,8 @@ public class ProcessTestDefaultFlow {
   public ActivitiRule activitiRule = new ActivitiRule();
 
   @Test
+  @Deployment(resources = { "diagrams/qun/DefaultFlow.bpmn" })
   public void startProcess() throws Exception {
-    RepositoryService repositoryService = activitiRule.getRepositoryService();
-    repositoryService.createDeployment().addInputStream("DefaultFlow.bpmn20.xml", new FileInputStream(filename)).deploy();
     RuntimeService runtimeService = activitiRule.getRuntimeService();
     Map<String, Object> variableMap = new HashMap<String, Object>();
     variableMap.put("type", "2");

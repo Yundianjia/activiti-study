@@ -35,7 +35,7 @@ public class ProcessTestAutoClaimForReject {
 		assertEquals("分配给角色", task.getName());
 		taskService.complete(task.getId());
 		
-		// 驳回请求
+		// 驳回请求 - 然后, 通过设置流程变量, 来改变流程的测试的路径
 		task = taskService.createTaskQuery().taskAssignee("user1").singleResult();
 		assertEquals("处理后驳回", task.getName());
 		Map<String, Object> vairables = new HashMap<String, Object>();

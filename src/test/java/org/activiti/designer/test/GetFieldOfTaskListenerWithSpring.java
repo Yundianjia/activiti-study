@@ -6,6 +6,10 @@ import org.activiti.spring.impl.test.SpringActivitiTestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
+
+/**
+ * Spring 整合 JUnit, 使用 ContextConfiguration 设置多个配置文件
+ */
 @ContextConfiguration("classpath:applicationContext-test.xml")
 public class GetFieldOfTaskListenerWithSpring extends SpringActivitiTestCase {
   
