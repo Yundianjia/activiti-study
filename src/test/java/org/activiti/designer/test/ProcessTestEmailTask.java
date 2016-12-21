@@ -31,6 +31,6 @@ public class ProcessTestEmailTask {
 		variableMap.put("name", "Activiti");
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("EmailTaskUserGmail", variableMap);
 		assertNotNull(processInstance.getId());
-		System.out.println("id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
+		System.out.println("流程 id " + processInstance.getId() + " " + processInstance.getProcessDefinitionId());
 	}
 }

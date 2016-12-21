@@ -25,10 +25,13 @@ public class ProcessTestDymaticTaskName {
 	@Deployment(resources = { "diagrams/DymaticTaskName.bpmn" })
 	public void startProcess() throws Exception {
 		RuntimeService runtimeService = activitiRule.getRuntimeService();
+		// 设置 启动任务的变量值, 在解析时, 传入可动态替换的值
 		Map<String, Object> variableMap = new HashMap<String, Object>();
 		variableMap.put("name", "Activiti");
+
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("DymaticTaskName", variableMap);
-		assertNotNull(processInstance.getId());
+		assertNotNull(processInstance.getId());  // 判断为空性的验证
+
 		System.out.println("id " + processInstance.getId() + " "
 				+ processInstance.getProcessDefinitionId());
 		TaskService taskService = activitiRule.getTaskService();
